@@ -1,0 +1,32 @@
+<mat-card>
+  <div fxLayout="column">
+      <mat-form-field>
+        <input matInput placeholder="First Name" required [(ngModel)]="account.firstName">
+      </mat-form-field> 
+      <mat-form-field>
+        <input matInput placeholder="Last Name" required [(ngModel)]="account.lastName">
+      </mat-form-field>
+ 
+    <mat-form-field>
+      <mat-select placeholder="Sex" [(ngModel)]="account.sex" >
+        <mat-option [value]="male">
+          Male
+        </mat-option>
+        <mat-option [value]="female">
+          Female
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input type="email" matInput placeholder="Email Address" required [(ngModel)]="account.email">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="password" matInput placeholder="Password" required [(ngModel)]="account.password">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="number" matInput placeholder="Age" min="21" max="40" required [(ngModel)]="account.age">
+    </mat-form-field>
+    <button class="submitButton" color="primary" mat-raised-button (click)="create()" fxFlex="25">Create Account</button>
+    <div>{{errorMessage}}</div>
+  </div>
+</mat-card>
