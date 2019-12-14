@@ -19,20 +19,16 @@ export class CreateAccountService {
    * createAccount
 account:Account    */
   public createAccount(account: Account): Promise<Account> {
-    console.log(account);
-    console.log('about to send to the the new account');
     let promise = new Promise<Account>((resolve, reject) => {
       let apiURL = `${environment.apiUrl}`;
       account.id = UUID.UUID();
       this.httpClient.post(apiURL + '/user', account, {headers:{}}).toPromise()
         .then(
           res => { 
-            console.log('success');
             resolve(account);
           }
         ).catch(ex => 
           {
-            console.log(ex);
             reject('Error Creating Account')
           });
     });
