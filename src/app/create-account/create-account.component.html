@@ -1,6 +1,30 @@
 <mat-card>
   <div fxLayout="column">
     <mat-form-field>
+      <input type="email" matInput placeholder="Email Address" required [(ngModel)]="account.email">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="password" matInput placeholder="Password" required [(ngModel)]="account.password">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="password" matInput placeholder="Confirm Password" required [(ngModel)]="confirmPasswordValue">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="number" matInput placeholder="Age" min="21" max="40" required [(ngModel)]="account.age">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="number" matInput min="21" max="40" placeholder="Minimum Date Age" required
+        [(ngModel)]="account.minDateAge">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="number" matInput min="21" max="40" placeholder="Max Date Age" required
+        [(ngModel)]="account.maxDateAge">
+    </mat-form-field>
+    <div>NOTE: these ranges will be used as suggestions but may "tweaked" if there are not enough potential matches in
+      your selected age range.</div>
+    <div>Having a larger range gives you the best chance of having the maximum number of dates at the event.</div>
+    <div>Your min date age cannot be greater than your age and your max date age cannot be lower than your age</div>
+    <mat-form-field>
       <input matInput placeholder="First Name" required [(ngModel)]="account.firstName">
     </mat-form-field>
     <mat-form-field>
@@ -17,19 +41,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field>
-      <input type="email" matInput placeholder="Email Address" required [(ngModel)]="account.email">
-    </mat-form-field>
-    <mat-form-field>
 
-      <input type="password" matInput placeholder="Password" required [(ngModel)]="account.password">
-    </mat-form-field>
-    <mat-form-field>
-      <input type="password" matInput placeholder="Confirm Password" required [(ngModel)]="confirmPasswordValue">
-    </mat-form-field>
-    <mat-form-field>
-      <input type="number" matInput placeholder="Age" min="21" max="40" required [(ngModel)]="account.age">
-    </mat-form-field>
     <button class="submitButton" color="primary" mat-raised-button (click)="create()" fxFlex="25">Create
       Account</button>
     <div>{{errorMessage}}</div>

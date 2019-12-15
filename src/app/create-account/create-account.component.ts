@@ -22,9 +22,10 @@ export class CreateAccountComponent implements OnInit {
   create() {
     if (this.confirmPasswordValue !== this.account.password) {
       this.errorMessage = 'password and confirmation do not match';
+      return;
     }
     this.createAccountService.createAccount(this.account).then(x => {
-        this.router.navigateByUrl('/login');
+      this.router.navigateByUrl('/login');
     }  // navigate to home
     ).catch(msg => {
       this.errorMessage = msg;
