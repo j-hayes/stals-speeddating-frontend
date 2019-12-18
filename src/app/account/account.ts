@@ -5,7 +5,7 @@ export class Account {
     age: string;
     password: string;
     sex: string;
-    id: string;
+    Id: string;
     minDateAge: number;
     maxDateAge: number;
 }

@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EventAdminServiceService } from './event-admin-service.service';
+import { EventAdminService } from './event-admin.service';
 
 describe('EventAdminServiceService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: EventAdminServiceService = TestBed.get(EventAdminServiceService);
+    const service: EventAdminService = TestBed.get(EventAdminService);
     expect(service).toBeTruthy();
   });
 });

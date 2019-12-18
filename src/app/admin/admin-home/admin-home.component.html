@@ -1,3 +1,38 @@
-<ul>
-  <li *ngFor="let user of users">{{user.email}}</li>
-  <ul>
+<div>
+  <h2>Manage Events</h2>
+</div>
+<form [formGroup]="selectEventForm">
+  <mat-form-field>
+    <mat-label> Select an Event to modify.</mat-label>
+    <mat-select [formControlName]="selectedEventFieldName">
+      <mat-option *ngFor="let event of events" [value]="event.Id">{{event.Id}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</form>
+
+<div *ngIf="selectedEvent">
+  <h3>Add Users to Event:{{selectedEvent.Id}}</h3>
+
+  <form [formGroup]="eventUsersAddForm">
+    <div *ngFor="let userNotInEvent of usersNotInEvent">
+      <mat-checkbox [formControlName]="userNotInEvent.Id">
+        {{userNotInEvent.firstName}} {{userNotInEvent.lastName}} - {{userNotInEvent.email}}
+      </mat-checkbox>
+    </div>
+
+  </form>
+
+
+
+  <h3>Remove Users from Event:{{selectedEvent.Id}}</h3>
+
+  <form [formGroup]="eventUsersRemoveForm">
+    <div *ngFor="let userInEvent of usersInEvent">
+      <mat-checkbox [formControlName]="userInEvent.Id">
+        {{userInEvent.firstName}} {{userInEvent.lastName}} - {{userInEvent.email}}
+      </mat-checkbox>
+    </div>
+  </form>
+  <button mat-raised-button color="primary" (click)="submitChanges()">Submit</button>
+
+</div>
