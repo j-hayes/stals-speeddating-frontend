@@ -7,7 +7,8 @@
         <div fxLayout="row">
             <a mat-button color="accent" routerLink="login">Login</a>
             <a mat-button color="accent" routerLink="createAccount">Create Account</a>
-            <a mat-button color="accent">Match Form</a>
+            <a *ngIf="isAdmin" routerLink="admin" mat-button color="accent">Admin</a>
+
         </div>
     </span>
 </mat-toolbar>

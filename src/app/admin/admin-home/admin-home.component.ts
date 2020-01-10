@@ -26,7 +26,7 @@ export class AdminHomeComponent implements OnInit {
 
 
 
-  private readonly selectedEventFieldName = 'selectedEvent';
+  public readonly selectedEventFieldName = 'selectedEvent';
 
   constructor(private userAdminServiceService: UserAdminService, private eventAdminService: EventAdminService) {
     const formControl = new FormControl();

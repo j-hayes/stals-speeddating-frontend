@@ -6,14 +6,15 @@
     <mat-form-field>
       <input type="password" matInput placeholder="Password" required [(ngModel)]="account.password">
     </mat-form-field>
+    <div>Password must be 10 characters or more.</div>
     <mat-form-field>
       <input type="password" matInput placeholder="Confirm Password" required [(ngModel)]="confirmPasswordValue">
     </mat-form-field>
     <mat-form-field>
-      <input type="number" matInput placeholder="Age" min="21" max="40" required [(ngModel)]="account.age">
+      <input type="number" matInput placeholder="Age" min="21" max="39" required [(ngModel)]="account.age">
     </mat-form-field>
     <mat-form-field>
-      <input type="number" matInput min="21" max="40" placeholder="Minimum Date Age" required
+      <input type="number" matInput min="21" max="40"  placeholder="Minimum Date Age" required
         [(ngModel)]="account.minDateAge">
     </mat-form-field>
     <mat-form-field>

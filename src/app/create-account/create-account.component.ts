@@ -20,8 +20,25 @@ export class CreateAccountComponent implements OnInit {
   }
 
   create() {
+    var allFieldsFilledOut = this.account.allFieldsFilledOut();
+    if (!allFieldsFilledOut) {
+      this.errorMessage = 'please fill out all required fields'
+      return;
+    }
+    if(this.account.age < this.account.minDateAge){
+      this.errorMessage = 'Min date age can not be greater than your age.';
+      return;
+    }
+    if(this.account.age > this.account.maxDateAge){
+      this.errorMessage = 'Max date age can not be less than your age.';
+      return;
+    }
     if (this.confirmPasswordValue !== this.account.password) {
       this.errorMessage = 'password and confirmation do not match';
+      return;
+    }
+    if(this.account.password.length < 10){
+      this.errorMessage = 'password must be 10 or more characters';
       return;
     }
     this.createAccountService.createAccount(this.account).then(x => {
