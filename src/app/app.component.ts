@@ -15,11 +15,16 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginServiceService.loginEvent.subscribe(_ => {
-      this.loginServiceService.isAdmin().then(isAdmin => this.isAdmin = isAdmin);
-    })
+      this.loginServiceService.isAdmin().then(isAdmin => this.SetIsAdmin(isAdmin));
+    });
+    this.loginServiceService.isAdmin().then(isAdmin => this.SetIsAdmin(isAdmin));
   }
   title = 'speed-dating';
 
 
 
+
+  private SetIsAdmin(isAdmin: boolean): boolean | PromiseLike<boolean> {
+    return this.isAdmin = isAdmin;
+  }
 }

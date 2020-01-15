@@ -1,38 +1,54 @@
-<div>
-  <h2>Manage Events</h2>
-</div>
-<form [formGroup]="selectEventForm">
-  <mat-form-field>
-    <mat-label> Select an Event to modify.</mat-label>
-    <mat-select [formControlName]="selectedEventFieldName">
-      <mat-option *ngFor="let event of events" [value]="event.Id">{{event.Id}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-</form>
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Manage Events
+      </mat-panel-title>
+    </mat-expansion-panel-header>
 
-<div *ngIf="selectedEvent">
-  <h3>Add Users to Event:{{selectedEvent.Id}}</h3>
+    <form [formGroup]="selectEventForm">
+      <mat-form-field>
+        <mat-label> Select an Event to modify.</mat-label>
+        <mat-select [formControlName]="selectedEventFieldName">
+          <mat-option *ngFor="let event of events" [value]="event.Id">{{event.Id}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
 
-  <form [formGroup]="eventUsersAddForm">
-    <div *ngFor="let userNotInEvent of usersNotInEvent">
-      <mat-checkbox [formControlName]="userNotInEvent.Id">
-        {{userNotInEvent.firstName}} {{userNotInEvent.lastName}} - {{userNotInEvent.email}}
-      </mat-checkbox>
+    <div *ngIf="selectedEvent">
+      <h3>Add Users to Event:{{selectedEvent.Id}}</h3>
+
+      <form [formGroup]="eventUsersAddForm">
+        <div *ngFor="let userNotInEvent of usersNotInEvent">
+          <mat-checkbox [formControlName]="userNotInEvent.Id">
+            {{userNotInEvent.firstName}} {{userNotInEvent.lastName}} - {{userNotInEvent.email}}
+          </mat-checkbox>
+        </div>
+      </form>
+      <h3>Remove Users from Event:{{selectedEvent.Id}}</h3>
+
+      <form [formGroup]="eventUsersRemoveForm">
+        <div *ngFor="let userInEvent of usersInEvent">
+          <mat-checkbox [formControlName]="userInEvent.Id">
+            {{userInEvent.firstName}} {{userInEvent.lastName}} - {{userInEvent.email}}
+          </mat-checkbox>
+        </div>
+      </form>
+      <button mat-raised-button color="primary" (click)="submitChanges()">Submit</button>
     </div>
+  </mat-expansion-panel>
 
-  </form>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        All Registered Users:
+      </mat-panel-title>
+    </mat-expansion-panel-header>
 
-
-
-  <h3>Remove Users from Event:{{selectedEvent.Id}}</h3>
-
-  <form [formGroup]="eventUsersRemoveForm">
-    <div *ngFor="let userInEvent of usersInEvent">
-      <mat-checkbox [formControlName]="userInEvent.Id">
-        {{userInEvent.firstName}} {{userInEvent.lastName}} - {{userInEvent.email}}
-      </mat-checkbox>
+    <div *ngFor="let user of users">
+      <div>
+        {{user.firstName}} {{user.lastName}} - {{user.email}}
+      </div>
     </div>
-  </form>
-  <button mat-raised-button color="primary" (click)="submitChanges()">Submit</button>
-
-</div>
+  </mat-expansion-panel>
+</mat-accordion>

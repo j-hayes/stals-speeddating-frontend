@@ -42,7 +42,7 @@ export class CreateAccountComponent implements OnInit {
       return;
     }
     this.createAccountService.createAccount(this.account).then(x => {
-      this.router.navigateByUrl('/login');
+      this.router.navigateByUrl('/login?accountCreation=true');
     }  // navigate to home
     ).catch(msg => {
       this.errorMessage = msg;

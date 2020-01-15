@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MatButtonModule, MatCheckboxModule, MatToolbarModule, MatFormField, MatFormFieldModule, MatInputModule, MatCardModule, MatSliderModule, MatSelectModule, MatButton } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatToolbarModule, MatFormField, MatFormFieldModule, MatInputModule, MatCardModule, MatSliderModule, MatSelectModule, MatButton, MatAccordion, MatExpansionModule } from '@angular/material';
 import { LoginComponent } from './login/login.component';
 import { CreateAccountComponent } from './create-account/create-account.component';
 import { RoutingModule } from './routing/routing.module';
@@ -39,6 +39,7 @@ import { AuthInterceptor } from './auth-interceptor';
     MatSliderModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatExpansionModule,
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule

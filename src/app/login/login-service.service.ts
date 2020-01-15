@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class LoginServiceService {
+  tokenSessionStorageConst = 'token';
 
   loginEvent : EventEmitter<string>;
   constructor(private httpClient: HttpClient){
@@ -34,8 +35,11 @@ export class LoginServiceService {
       this.httpClient.post(apiURL + '/user/login', loginInfo, { headers: {} }).toPromise()
         .then(
           res => {
-            resolve(res['token']);
+            const token = res['token']
+            sessionStorage.setItem(this.tokenSessionStorageConst, res[this.tokenSessionStorageConst]);
             this.loginEvent.next('');
+            resolve(token);
+          
           }
         ).catch(ex => {
           reject('Error logging in')
