@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UserAdminService } from '../user-admin.service';
 import { EventAdminService } from '../event-admin.service';
-import { Event } from '../../event/event';
+import { Event, EventDate } from '../../event/event';
 import { Account } from '../../account/account';
-import { promise } from 'protractor';
 import { FormGroup, FormControl } from '@angular/forms';
+import * as _ from 'lodash'
 
 @Component({
   selector: 'app-admin-home',
@@ -20,6 +20,9 @@ export class AdminHomeComponent implements OnInit {
   selectEventForm: FormGroup = new FormGroup({});
   eventUsersRemoveForm: FormGroup = new FormGroup({});
   eventUsersAddForm: FormGroup = new FormGroup({});
+  selectedEventMenCsv: string[] = [];
+  selectedEventWomenCsv: string[] = [];
+
 
   usersNotInEvent: Account[];
   usersInEvent: Account[];
@@ -27,6 +30,8 @@ export class AdminHomeComponent implements OnInit {
 
 
   public readonly selectedEventFieldName = 'selectedEvent';
+  userDateCsvLines: string[];
+
 
   constructor(private userAdminServiceService: UserAdminService, private eventAdminService: EventAdminService) {
     const formControl = new FormControl();
@@ -49,6 +54,10 @@ export class AdminHomeComponent implements OnInit {
     if (!eventId) {
       return; // blank selected;
     }
+
+    const eventSchedulePromise = this.eventAdminService.getEventSchedule(eventId);
+    eventSchedulePromise.then(x => this.parseDatesForDisplay(x));
+
     this.eventUsersAddForm = new FormGroup({});
     this.eventUsersRemoveForm = new FormGroup({});
     const usersNotInEvent = new Array<Account>();
@@ -76,6 +85,77 @@ export class AdminHomeComponent implements OnInit {
     this.usersNotInEvent = usersNotInEvent;
 
 
+  }
+  parseDatesForDisplay(eventDates: EventDate[]): any {
+
+    this.selectedEventWomenCsv = [];
+    this.selectedEventMenCsv = [];
+    if (eventDates.length < 1) {
+      return;
+    }
+    this.users.forEach(x => x.dates = []);
+    for (const date of eventDates) {
+      const man = this.users.find(x => x.Id === date.manId);
+      const woman = this.users.find(x => x.Id === date.womanId);
+      if (man) {
+        man.dates.push(date);
+      }
+      if (woman) {
+        woman.dates.push(date);
+      }
+    }
+
+    this.userDateCsvLines = [];
+    this.users.forEach(user => {
+      var isMan = user.sex.toLowerCase() === 'male';
+      _.orderBy(user.dates, "round", "asc");
+
+      let userDateCSV = `${user.firstName} ${user.lastName},`;
+      for (let i = 1; i < 100; i++) {
+
+        const date = user.dates.find(x => x.round === i);
+        if (!date) {
+          userDateCSV += "Break,"
+        } else {
+          var otherUser: Account;
+
+          if (!isMan) {
+            otherUser = this.users.find(u => u.Id === date.manId);
+          } else {
+            otherUser = this.users.find(u => u.Id === date.womanId);
+          }
+          if (otherUser) {
+            userDateCSV += `${otherUser.firstName} ${otherUser.lastName}: ${date.round},`;
+          }
+          else {
+            userDateCSV += `Error couldn'nt find date in user list regenerate schedule!`;
+          }
+        }
+      }
+      if (isMan) {
+        this.selectedEventMenCsv.push(userDateCSV);
+      } else {
+        this.selectedEventWomenCsv.push(userDateCSV);
+      }
+    }
+    );
+
+    this.selectedEvent.hasSchedule = true;
+  }
+  createEventSchedule() {
+    if (this.selectedEvent) {
+      this.eventAdminService.createEventSchedule(this.selectedEvent.Id)
+        .then(x => this.eventAdminService.getEventSchedule(this.selectedEvent.Id)
+          .then(x => this.parseDatesForDisplay(x)));
+    }
+  }
+
+  finalizeSchedule(){
+    if (this.selectedEvent && this.selectedEvent.hasSchedule) {
+      this.eventAdminService.finalizeSchedule(this.selectedEvent.Id)
+        .then(x => this.eventAdminService.getEventSchedule(this.selectedEvent.Id)
+          .then(x => this.parseDatesForDisplay(x)));
+    }
   }
 
   submitChanges() {

@@ -35,7 +35,26 @@
         </div>
       </form>
       <button mat-raised-button color="primary" (click)="submitChanges()">Submit</button>
-    </div>
+      <button *ngIf="!selectedEvent.open" mat-raised-button color="primary" (click)="createEventSchedule()">Create Schedule For Event</button>
+
+      <div>Women Schedule</div>
+      <div *ngIf=selectedEventWomenCsv>
+        <div *ngFor="let csvLine of selectedEventWomenCsv">
+          {{csvLine}}
+        </div>
+        <br/>        
+      </div>
+      <div>Men Schedule</div>
+      <div *ngIf=selectedEventMenCsv>
+        <div *ngFor="let csvLine of selectedEventMenCsv">
+          {{csvLine}}
+        </div>
+        <br/>        
+      </div>
+      <button *ngIf="selectedEvent.hasSchedule &&!selectedEvent.scheduleFinalized" mat-raised-button color="primary" 
+        (click)="finalizeSchedule()">Finalize Schedule</button>
+
+  </div>
   </mat-expansion-panel>
 
   <mat-expansion-panel>

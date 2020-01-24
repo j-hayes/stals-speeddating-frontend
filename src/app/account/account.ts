@@ -1,3 +1,5 @@
+import { EventDate } from '../event/event';
+
 export class Account {
   allFieldsFilledOut():boolean {
     return this.firstName !== '' &&
@@ -18,4 +20,5 @@ export class Account {
     Id: string = '';
     minDateAge: number = 0;
     maxDateAge: number = 0;
+    dates: EventDate[] = [];
 }

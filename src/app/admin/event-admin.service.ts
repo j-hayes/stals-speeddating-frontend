@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Event } from '../event/event';
+import { Event, EventDate } from '../event/event';
 import { Account } from '../Account/Account';
 
 
@@ -9,9 +9,8 @@ import { Account } from '../Account/Account';
   providedIn: 'root'
 })
 export class EventAdminService {
-
-
-
+  
+ 
   constructor(private httpClient: HttpClient) { }
   getEvents() {
     let promise = new Promise<Event[]>((resolve, reject) => {
@@ -27,6 +26,21 @@ export class EventAdminService {
     });
     return promise;
   }
+  getEventSchedule(eventId:string) {
+    let promise = new Promise<EventDate[]>((resolve, reject) => {
+      let apiURL = `${environment.apiUrl}`;
+      this.httpClient.get(`${apiURL}/schedule/event/${eventId}`).toPromise()
+        .then(
+          res => {
+            resolve(res as EventDate[]);
+          }
+        ).catch(ex => {
+          reject('Error getting users')
+        });
+    });
+    return promise;
+  }
+
 
   removeUsersFromEvent(selectedEvent: Event, usersToRemove: Account[]) {
     let promise = new Promise<Event[]>((resolve, reject) => {
@@ -67,5 +81,34 @@ export class EventAdminService {
     });
     return promise;
   }
+  createEventSchedule(eventId: string) {
+    let promise = new Promise<EventDate[]>((resolve, reject) => {
+      let apiURL = `${environment.apiUrl}`;
+      this.httpClient.post(`${apiURL}/schedule/event/${eventId}`, null).toPromise()
+        .then(
+          res => {
+            resolve();
+          }
+        ).catch(ex => {
+          reject('Error creating event schedule')
+        });
+    });
+    return promise;
+  }
 
+  finalizeSchedule(eventId: string) {
+    let promise = new Promise<EventDate[]>((resolve, reject) => {
+      let apiURL = `${environment.apiUrl}`;
+      this.httpClient.put(`${apiURL}/schedule/event/${eventId}/finalize`, null).toPromise()
+        .then(
+          res => {
+            resolve();
+          }
+        ).catch(ex => {
+          reject('Error finalizing event schedule')
+        });
+    });
+    return promise;
+  }
+ 
 }
