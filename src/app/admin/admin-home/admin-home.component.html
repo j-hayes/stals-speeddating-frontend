@@ -16,26 +16,37 @@
     </form>
 
     <div *ngIf="selectedEvent">
-      <h3>Add Users to Event:{{selectedEvent.Id}}</h3>
 
-      <form [formGroup]="eventUsersAddForm">
-        <div *ngFor="let userNotInEvent of usersNotInEvent">
-          <mat-checkbox [formControlName]="userNotInEvent.Id">
-            {{userNotInEvent.firstName}} {{userNotInEvent.lastName}} - {{userNotInEvent.email}}
-          </mat-checkbox>
-        </div>
-      </form>
-      <h3>Remove Users from Event:{{selectedEvent.Id}}</h3>
+      <div *ngIf="selectedEvent.open">
+        <h3>This event is over and open for daters to submit their matches!</h3>
+      </div>
 
-      <form [formGroup]="eventUsersRemoveForm">
-        <div *ngFor="let userInEvent of usersInEvent">
-          <mat-checkbox [formControlName]="userInEvent.Id">
-            {{userInEvent.firstName}} {{userInEvent.lastName}} - {{userInEvent.email}}
-          </mat-checkbox>
-        </div>
-      </form>
-      <button mat-raised-button color="primary" (click)="submitChanges()">Submit</button>
-      <button *ngIf="!selectedEvent.open" mat-raised-button color="primary" (click)="createEventSchedule()">Create Schedule For Event</button>
+      <div *ngIf="selectedEvent.scheduleFinalized && !selectedEvent.open">
+        <h3>The scheudule for this event is finalized!</h3>
+        <button *ngIf="!selectedEvent.open" mat-raised-button color="primary" (click)="openEvent()">Open Event Match Form</button>
+      </div>
+
+      <div *ngIf="!selectedEvent.scheduleFinalized">
+        <h3>Add Users to Event:{{selectedEvent.Id}}</h3>
+        <form [formGroup]="eventUsersAddForm">
+          <div *ngFor="let userNotInEvent of usersNotInEvent">
+            <mat-checkbox [formControlName]="userNotInEvent.Id">
+              {{userNotInEvent.firstName}} {{userNotInEvent.lastName}} - {{userNotInEvent.email}}
+            </mat-checkbox>
+          </div>
+        </form>
+        <h3>Remove Users from Event:{{selectedEvent.Id}}</h3>  
+        <form [formGroup]="eventUsersRemoveForm">
+          <div *ngFor="let userInEvent of usersInEvent">
+            <mat-checkbox [formControlName]="userInEvent.Id">
+              {{userInEvent.firstName}} {{userInEvent.lastName}} - {{userInEvent.email}}
+            </mat-checkbox>
+          </div>
+        </form>
+        <button mat-raised-button color="primary" (click)="submitChanges()">Submit Add Remove User Changes</button>
+        <button *ngIf="!selectedEvent.open" mat-raised-button color="primary" (click)="createEventSchedule()">Create Schedule For Event</button>
+      </div>
+      
 
       <div>Women Schedule</div>
       <div *ngIf=selectedEventWomenCsv>
@@ -53,6 +64,7 @@
       </div>
       <button *ngIf="selectedEvent.hasSchedule &&!selectedEvent.scheduleFinalized" mat-raised-button color="primary" 
         (click)="finalizeSchedule()">Finalize Schedule</button>
+        
 
   </div>
   </mat-expansion-panel>
@@ -63,10 +75,13 @@
         All Registered Users:
       </mat-panel-title>
     </mat-expansion-panel-header>
-
+    
     <div *ngFor="let user of users">
       <div>
-        {{user.firstName}} {{user.lastName}} - {{user.email}}
+        <h3>{{user.firstName}} {{user.lastName}} - {{user.email}} </h3>
+      </div>
+      <div>
+        Age:{{user.age}} - Date Range {{user.minDateAge}} - {{user.maxDateAge}}
       </div>
     </div>
   </mat-expansion-panel>

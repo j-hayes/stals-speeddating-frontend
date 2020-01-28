@@ -10,6 +10,7 @@ import { Account } from '../Account/Account';
 })
 export class EventAdminService {
   
+  
  
   constructor(private httpClient: HttpClient) { }
   getEvents() {
@@ -106,6 +107,21 @@ export class EventAdminService {
           }
         ).catch(ex => {
           reject('Error finalizing event schedule')
+        });
+    });
+    return promise;
+  }
+
+  openEvent(eventId: string) {
+    let promise = new Promise<EventDate[]>((resolve, reject) => {
+      let apiURL = `${environment.apiUrl}`;
+      this.httpClient.put(`${apiURL}/event/${eventId}/open`, null).toPromise()
+        .then(
+          res => {
+            resolve();
+          }
+        ).catch(ex => {
+          reject('Error opening event')
         });
     });
     return promise;

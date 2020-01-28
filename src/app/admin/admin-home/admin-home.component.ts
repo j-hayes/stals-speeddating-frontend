@@ -109,8 +109,13 @@ export class AdminHomeComponent implements OnInit {
     this.users.forEach(user => {
       var isMan = user.sex.toLowerCase() === 'male';
       _.orderBy(user.dates, "round", "asc");
+      let userInEvent = _.filter(this.selectedEvent.users, x => x === user.Id).length > 0;
 
-      let userDateCSV = `${user.firstName} ${user.lastName},`;
+      if (!userInEvent) {
+        console.log('user skipped: ' + user);
+        return;
+      }
+      let userDateCSV = `${user.firstName} ${user.lastName},${user.email},${user.age},${user.minDateAge},${user.maxDateAge},`;
       for (let i = 1; i < 100; i++) {
 
         const date = user.dates.find(x => x.round === i);
@@ -125,7 +130,7 @@ export class AdminHomeComponent implements OnInit {
             otherUser = this.users.find(u => u.Id === date.womanId);
           }
           if (otherUser) {
-            userDateCSV += `${otherUser.firstName} ${otherUser.lastName}: ${date.round},`;
+            userDateCSV += `${otherUser.firstName} ${otherUser.lastName},`;
           }
           else {
             userDateCSV += `Error couldn'nt find date in user list regenerate schedule!`;
@@ -150,11 +155,18 @@ export class AdminHomeComponent implements OnInit {
     }
   }
 
-  finalizeSchedule(){
+  finalizeSchedule() {
     if (this.selectedEvent && this.selectedEvent.hasSchedule) {
       this.eventAdminService.finalizeSchedule(this.selectedEvent.Id)
         .then(x => this.eventAdminService.getEventSchedule(this.selectedEvent.Id)
           .then(x => this.parseDatesForDisplay(x)));
+    }
+  }
+
+  openEvent(){
+    if (this.selectedEvent && this.selectedEvent.hasSchedule) {
+      this.eventAdminService.openEvent(this.selectedEvent.Id)
+      .then(z => { location.reload(); })
     }
   }
 
