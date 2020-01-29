@@ -1,3 +1,17 @@
-<p>
-  Please log back in after the event to fill out your matches!
-</p>
+<h2>Match Form:</h2>
+<h3>
+  Please mark which of your dates you would like to send your contact information to. 
+</h3>
+
+<div *ngFor="let event of events">
+  <div [formGroup]="event.formGroup">
+    <h3>{{event.name}}</h3>
+    <div *ngFor="let dateUser of event.users">
+      <mat-checkbox [formControlName]="dateUser.Id">
+        {{dateUser.firstName}} {{dateUser.lastName}}
+      </mat-checkbox>
+    </div>
+  </div>
+  <button mat-raised-button color="primary" 
+  (click)="submitEventMatches(event)">Submit {{event.name}} Matches</button>
+</div>

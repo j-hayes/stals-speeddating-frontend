@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   logIn() {
     this.loginService.logIn(this.username, this.password)
       .then(token => {
-        this.router.navigateByUrl('/home')
+        this.router.navigateByUrl('/home');
       }).catch(err => {
         this.errorMessage = 'Login Failure, try again';
       });

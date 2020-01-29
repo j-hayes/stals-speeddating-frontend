@@ -36,7 +36,8 @@ export class LoginServiceService {
         .then(
           res => {
             const token = res['token']
-            sessionStorage.setItem(this.tokenSessionStorageConst, res[this.tokenSessionStorageConst]);
+            sessionStorage.setItem('token', token);
+            sessionStorage.setItem('userId', username);
             this.loginEvent.next('');
             resolve(token);
           

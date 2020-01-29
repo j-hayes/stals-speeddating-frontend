@@ -158,15 +158,14 @@ export class AdminHomeComponent implements OnInit {
   finalizeSchedule() {
     if (this.selectedEvent && this.selectedEvent.hasSchedule) {
       this.eventAdminService.finalizeSchedule(this.selectedEvent.Id)
-        .then(x => this.eventAdminService.getEventSchedule(this.selectedEvent.Id)
-          .then(x => this.parseDatesForDisplay(x)));
+        .then(z => { location.reload(); })
     }
   }
 
-  openEvent(){
+  openEvent() {
     if (this.selectedEvent && this.selectedEvent.hasSchedule) {
       this.eventAdminService.openEvent(this.selectedEvent.Id)
-      .then(z => { location.reload(); })
+        .then(z => { location.reload(); })
     }
   }
 

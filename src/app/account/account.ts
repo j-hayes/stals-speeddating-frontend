@@ -16,7 +16,7 @@ export class Account {
     email: string = '';
     age: number = 0;
     password: string = '';
-    sex: string = '';
+    sex: 'male' | 'female' | '';;
     Id: string = '';
     minDateAge: number = 0;
     maxDateAge: number = 0;
