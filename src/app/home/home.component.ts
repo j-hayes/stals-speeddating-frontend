@@ -5,6 +5,8 @@ import { EventDate } from '../event/event';
 import * as _ from 'lodash';
 import { Account } from '../account/account'
 import { FormGroup, FormControl } from '@angular/forms';
+import { MatchService } from '../matches/match.service';
+import { Match } from '../matches/match';
 
 @Component({
   selector: 'app-home',
@@ -17,50 +19,90 @@ export class HomeComponent implements OnInit {
   events = [];
   userId: string;
   user: Account;
-  constructor(private router: Router, private userAdminService: UserAdminService) { }
+  userIsMale: boolean;
+  initiatedMatches: Match[];
+  myMatches: Match[];
+  constructor(private router: Router, private userAdminService: UserAdminService, private matchService: MatchService) { }
 
   ngOnInit() {
     this.userId = sessionStorage.getItem('userId');
-    this.userAdminService.getUsers().then(users => {
-      this.users = users;
-      this.user = users.find(x => x.Id === this.userId);
 
-      var userIsMale = this.user.sex === 'male';
-      this.userAdminService.getUserDates().then(x => {
-        var eventsDict = _.groupBy(x, "eventId");
-        Object.keys(eventsDict).forEach(key => {
-          var eventDates = eventsDict[key];
-          var users = [];
-          const formGroup = new FormGroup({});
-          eventDates.forEach(date => {
-            let dateUser: Account;
+    this.matchService.getUserMatches()
+      .then(matches => {
+        this.initiatedMatches = matches.filter(x => x.initiatingUserId == this.userId);
+        this.myMatches = matches.filter(x => x.matchUserId == this.userId);
 
-            if (userIsMale) {
-              dateUser = this.users.find(x => x.Id === date.womanId);
+        this.userAdminService.getUsers().then(users => {
+          this.users = users;
+          this.user = users.find(u => u.Id === this.userId);
 
-            }
-            else {
-              dateUser = this.users.find(x => x.Id === date.manId);
-            }
-            users.push(dateUser);
-            formGroup.addControl(dateUser.Id, new FormControl());
+          this.userIsMale = this.user.sex === 'male';
+          this.userAdminService.getUserDates().then(x => {
+            var eventsDict = _.groupBy(x, "eventId");
+            Object.keys(eventsDict).forEach(key => {
+              const eventHasBeenSubmitted = this.initiatedMatches.filter(x => x.eventId === key).length > 0;
 
+              var eventMatches: Account[] = [];
+              this.myMatches
+                .filter(x => x.eventId === key && x.matchUserId === this.userId)
+                .forEach(match => {
+                  const matchUser = this.users.find(x => x.Id === match.initiatingUserId);
+                  if (matchUser) {
+                    eventMatches.push(matchUser);
+                  }
+                });
+
+              var eventDates = eventsDict[key];
+              var users = [];
+              const formGroup = new FormGroup({});
+              eventDates.forEach(date => {
+                let dateUser: Account;
+                if (this.userIsMale) {
+                  dateUser = this.users.find(x => x.Id === date.womanId);
+                }
+                else {
+                  dateUser = this.users.find(x => x.Id === date.manId);
+                }
+                users.push(dateUser);
+                formGroup.addControl(`${dateUser.Id}`, new FormControl());
+              });
+
+              this.events.push({
+                Id: key,
+                users: users,
+                formGroup: formGroup,
+                eventDates: eventDates,
+                eventHasBeenSubmitted: eventHasBeenSubmitted,
+                eventMatches: eventMatches
+              });
+            });
           });
-
-          this.events.push({
-            name: key,
-            users: users,
-            formGroup: formGroup
-          });
-
         });
       });
-    });
   }
 
 
 
   submitEventMatches(event) {
-    console.log('submit!')
+    let matchesToSubmit = [];
+    Object.keys(event.formGroup.controls).forEach(key => {
+      if (event.formGroup.controls[key].value === true) {
+        let date: EventDate;
+        if (this.userIsMale) {
+          date = event.eventDates.find(x => x.womanId === key);
+        }
+        else {
+          date = event.eventDates.find(x => x.manId === key);
+        }
+        const match = new Match();
+        match.dateId = date.Id;
+        match.eventId = event.Id;
+        match.matchUserId = key;
+        matchesToSubmit.push(match);
+      }
+    });
+    this.matchService.submitMatches(matchesToSubmit)
+      .then(x => { location.reload(); })
+      .catch(x => { event.errorMessage = 'Failed to upload matches. Please try again'; });
   }
 }

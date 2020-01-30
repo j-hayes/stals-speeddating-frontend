@@ -30,7 +30,7 @@ export class UserAdminService {
   getUserDates(){
     let promise = new Promise<EventDate[]>((resolve, reject) => {
       let apiURL = `${environment.apiUrl}`;
-      this.httpClient.get(apiURL + `/dates`).toPromise()
+      this.httpClient.get(apiURL + `/dates/mine`).toPromise()
         .then(
           res => {
             resolve(res as EventDate[]);
@@ -41,4 +41,6 @@ export class UserAdminService {
     });
     return promise;
   }
+
+  
 }
