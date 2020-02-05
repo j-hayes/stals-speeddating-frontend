@@ -8,13 +8,16 @@ import { LoginServiceService } from './login/login-service.service';
 })
 export class AppComponent implements OnInit {
   isAdmin: boolean;
+  loggedIn: boolean;
 
   constructor(private loginServiceService: LoginServiceService) {
 
   }
 
   ngOnInit(): void {
+    this.loggedIn =  this.loginServiceService.loggedOn;
     this.loginServiceService.loginEvent.subscribe(_ => {
+      this.loggedIn = true;
       this.loginServiceService.isAdmin().then(isAdmin => this.SetIsAdmin(isAdmin));
     });
     this.loginServiceService.isAdmin().then(isAdmin => this.SetIsAdmin(isAdmin));

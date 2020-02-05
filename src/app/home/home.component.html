@@ -14,7 +14,7 @@
     
     <button mat-raised-button color="primary" (click)="submitEventMatches(event)">Submit {{event.Id}} Matches</button>
   </div>
-  <div>The following users want you to have thier contact information:</div>
+  <div>The following users want you to have their contact information:</div>
   <div *ngFor="let match of event.eventMatches">
       {{match.firstName}} {{match.lastName}} - {{match.Id}}
   </div>

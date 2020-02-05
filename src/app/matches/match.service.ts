@@ -32,19 +32,27 @@ export class MatchService {
     return Promise.all(promises);
   }
 
-  
-  getUserMatches(){
-    let promise = new Promise<Match[]>((resolve, reject) => {
-      let apiURL = `${environment.apiUrl}`;
-      this.httpClient.get(apiURL + `/match/mine`).toPromise()
-        .then(
-          res => {
-            resolve(res as Match[]);
+  //recursive call, could get problematic if there are too many pages but should be fine. 
+  //todo look into how to do this without recursion.
+  getUserMatches(matches: Match[] = [], lastEvaludatedKey: string = '') {
+
+    let apiURL = `${environment.apiUrl}`;
+    let lastEvaludatedKeyParam = '';
+    if (lastEvaludatedKey) {
+      lastEvaludatedKeyParam = `?exclusiveStartKey=${lastEvaludatedKey}`
+    }
+    return this.httpClient.get(`${apiURL}/match/mine${lastEvaludatedKeyParam}`).toPromise()
+      .then(
+        (res: any) => {
+          res.matches.forEach(date => { matches.push(date) });
+
+          if (res.LastEvaluatedKey) {
+            return this.getUserMatches(matches, res.LastEvaluatedKey.Id);
           }
-        ).catch(ex => {
-          reject('Error getting matches initiated by user')
-        });
-    });
-    return promise;
+          else {
+            return matches;
+          }
+        }
+      );
   }
 }

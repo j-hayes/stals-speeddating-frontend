@@ -7,13 +7,16 @@ import { environment } from '../../environments/environment';
 })
 export class LoginServiceService {
   tokenSessionStorageConst = 'token';
-
-  loginEvent : EventEmitter<string>;
-  constructor(private httpClient: HttpClient){
+  loggedOn = false;
+  loginEvent: EventEmitter<string>;
+  constructor(private httpClient: HttpClient) {
     this.loginEvent = new EventEmitter<string>();
+    if (sessionStorage.getItem(this.tokenSessionStorageConst)) {
+      this.loggedOn = true;
+    }
   }
 
-  isAdmin(){
+  isAdmin() {
     let promise = new Promise<boolean>((resolve, reject) => {
       let apiURL = `${environment.apiUrl}`;
       this.httpClient.get(apiURL + '/user/isAdmin').toPromise()
@@ -40,7 +43,7 @@ export class LoginServiceService {
             sessionStorage.setItem('userId', username);
             this.loginEvent.next('');
             resolve(token);
-          
+
           }
         ).catch(ex => {
           reject('Error logging in')

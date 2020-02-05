@@ -115,8 +115,7 @@ export class AdminHomeComponent implements OnInit {
       _.orderBy(user.dates, "round", "asc");
       let userInEvent = _.filter(this.selectedEvent.users, x => x === user.Id).length > 0;
 
-      if (!userInEvent) {
-        console.log('user skipped: ' + user);
+      if (!userInEvent) {      
         return;
       }
       let tableNumber = '';
