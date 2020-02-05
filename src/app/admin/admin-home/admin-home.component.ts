@@ -115,7 +115,14 @@ export class AdminHomeComponent implements OnInit {
         console.log('user skipped: ' + user);
         return;
       }
-      let userDateCSV = `${user.firstName} ${user.lastName},${user.email},${user.age},${user.minDateAge},${user.maxDateAge},`;
+      let tableNumber = '';
+      if(!isMan){
+        const firstDate = user.dates.filter(x=>x.tableNumber);
+        if(firstDate && firstDate.length > 0){
+          tableNumber = `${firstDate[0].tableNumber}`
+        }
+      }
+      let userDateCSV = `${user.firstName} ${user.lastName},${user.email},${tableNumber },${user.age},${user.minDateAge},${user.maxDateAge},`;
       for (let i = 1; i < 100; i++) {
 
         const date = user.dates.find(x => x.round === i);
@@ -129,9 +136,14 @@ export class AdminHomeComponent implements OnInit {
           } else {
             otherUser = this.users.find(u => u.Id === date.womanId);
           }
-          if (otherUser) {
-            userDateCSV += `${otherUser.firstName} ${otherUser.lastName},`;
+          let isInAngeRangeMark = '';
+          if (!date.areInEachOthersDatingRange) {
+            isInAngeRangeMark += `(O.R.)`;
           }
+          if (otherUser) {
+            userDateCSV += `${otherUser.firstName} ${otherUser.lastName}- ${date.tableNumber} -${isInAngeRangeMark},`;
+          }
+          
           else {
             userDateCSV += `Error couldn'nt find date in user list regenerate schedule!`;
           }

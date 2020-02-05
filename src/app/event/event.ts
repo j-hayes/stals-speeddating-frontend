@@ -12,4 +12,6 @@ export class EventDate {
         manId:string;
         womanId:string;
         round:number;
+        areInEachOthersDatingRange:boolean;
+        tableNumber:number;
 }

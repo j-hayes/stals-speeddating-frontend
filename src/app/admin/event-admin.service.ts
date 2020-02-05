@@ -3,15 +3,16 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Event, EventDate } from '../event/event';
 import { Account } from '../Account/Account';
+import { last } from '@angular/router/src/utils/collection';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventAdminService {
-  
-  
- 
+
+
+
   constructor(private httpClient: HttpClient) { }
   getEvents() {
     let promise = new Promise<Event[]>((resolve, reject) => {
@@ -27,19 +28,30 @@ export class EventAdminService {
     });
     return promise;
   }
-  getEventSchedule(eventId:string) {
-    let promise = new Promise<EventDate[]>((resolve, reject) => {
-      let apiURL = `${environment.apiUrl}`;
-      this.httpClient.get(`${apiURL}/schedule/event/${eventId}`).toPromise()
-        .then(
-          res => {
-            resolve(res as EventDate[]);
+
+
+  //recursive call, could get problematic if there are too many pages but should be fine. 
+  //todo look into how to do this without recursion.
+  getEventSchedule(eventId: string, dates: EventDate[] = [], lastEvaludatedKey: string = '') {
+
+    let apiURL = `${environment.apiUrl}`;
+    let lastEvaludatedKeyParam = '';
+    if (lastEvaludatedKey) {
+      lastEvaludatedKeyParam = `?exclusiveStartKey=${lastEvaludatedKey}`
+    }
+    return this.httpClient.get(`${apiURL}/schedule/event/${eventId}${lastEvaludatedKeyParam}`).toPromise()
+      .then(
+        (res: any) => {
+          res.dates.forEach(date => { dates.push(date) });
+
+          if (res.LastEvaluatedKey) {
+            return this.getEventSchedule(eventId, dates, res.LastEvaluatedKey.Id);
           }
-        ).catch(ex => {
-          reject('Error getting users')
-        });
-    });
-    return promise;
+          else {
+            return dates;
+          }
+        }
+      );
   }
 
 
@@ -126,5 +138,5 @@ export class EventAdminService {
     });
     return promise;
   }
- 
+
 }
