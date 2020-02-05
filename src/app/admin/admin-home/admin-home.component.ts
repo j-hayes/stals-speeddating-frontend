@@ -5,6 +5,7 @@ import { Event, EventDate } from '../../event/event';
 import { Account } from '../../account/account';
 import { FormGroup, FormControl } from '@angular/forms';
 import * as _ from 'lodash'
+import { promise } from 'protractor';
 
 @Component({
   selector: 'app-admin-home',
@@ -27,10 +28,13 @@ export class AdminHomeComponent implements OnInit {
   usersNotInEvent: Account[];
   usersInEvent: Account[];
 
+  username = '';
+  password = '';
 
 
   public readonly selectedEventFieldName = 'selectedEvent';
   userDateCsvLines: string[];
+  passwordUpdateMessage: string;
 
 
   constructor(private userAdminServiceService: UserAdminService, private eventAdminService: EventAdminService) {
@@ -116,13 +120,13 @@ export class AdminHomeComponent implements OnInit {
         return;
       }
       let tableNumber = '';
-      if(!isMan){
-        const firstDate = user.dates.filter(x=>x.tableNumber);
-        if(firstDate && firstDate.length > 0){
+      if (!isMan) {
+        const firstDate = user.dates.filter(x => x.tableNumber);
+        if (firstDate && firstDate.length > 0) {
           tableNumber = `${firstDate[0].tableNumber}`
         }
       }
-      let userDateCSV = `${user.firstName} ${user.lastName},${user.email},${tableNumber },${user.age},${user.minDateAge},${user.maxDateAge},`;
+      let userDateCSV = `${user.firstName} ${user.lastName},${user.email},${tableNumber},${user.age},${user.minDateAge},${user.maxDateAge},`;
       for (let i = 1; i < 100; i++) {
 
         const date = user.dates.find(x => x.round === i);
@@ -143,7 +147,7 @@ export class AdminHomeComponent implements OnInit {
           if (otherUser) {
             userDateCSV += `${otherUser.firstName} ${otherUser.lastName}- ${date.tableNumber} -${isInAngeRangeMark},`;
           }
-          
+
           else {
             userDateCSV += `Error couldn'nt find date in user list regenerate schedule!`;
           }
@@ -213,4 +217,9 @@ export class AdminHomeComponent implements OnInit {
     return null;
   }
 
+  resetUserPassword() {
+    this.userAdminServiceService.resetPassword(this.username, this.password)
+      .then(x => this.passwordUpdateMessage = 'Password Updated Successfully')
+      .catch(err => this.passwordUpdateMessage = 'Failed To Update Password');
+  }
 }
