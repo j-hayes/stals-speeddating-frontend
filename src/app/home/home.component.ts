@@ -111,7 +111,9 @@ export class HomeComponent implements OnInit {
       }
     });
     this.matchService.submitMatches(matchesToSubmit)
-      .then(x => { location.reload(); })
+      .then(x => {
+        event.eventHasBeenSubmitted = true;
+      })
       .catch(x => { event.errorMessage = 'Failed to upload matches. Please try again'; });
   }
 }

@@ -1,10 +1,9 @@
-<h2>Match Form:</h2>
+<h1>Match Form:</h1>
 <h3>
   Please mark which of your dates you would like to send your contact information to.
 </h3>
-
 <div *ngFor="let event of events">
-  <h3>{{event.Id}} - <span *ngIf="event.eventHasBeenSubmitted">Submitted</span> </h3>
+  <h2>{{event.Id}} - <span *ngIf="event.eventHasBeenSubmitted">Submitted</span> </h2>
   <div *ngIf="!event.eventHasBeenSubmitted" [formGroup]="event.formGroup">
     <div *ngFor="let dateUser of event.users">
       <mat-checkbox [formControlName]="dateUser.Id">
@@ -14,7 +13,7 @@
     
     <button mat-raised-button color="primary" (click)="submitEventMatches(event)">Submit {{event.Id}} Matches</button>
   </div>
-  <div>The following users want you to have their contact information:</div>
+  <div><h3>The following users want you to have their contact information:</h3></div>
   <div *ngFor="let match of event.eventMatches">
       {{match.firstName}} {{match.lastName}} - {{match.Id}}
   </div>
