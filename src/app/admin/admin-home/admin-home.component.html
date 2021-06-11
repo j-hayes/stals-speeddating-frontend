@@ -23,6 +23,7 @@
 
       <div *ngIf="selectedEvent.scheduleFinalized && !selectedEvent.open">
         <h3>The scheudule for this event is finalized!</h3>
+        <button *ngIf="!selectedEvent.open" mat-raised-button color="primary" (click)="printEvent()">Print Participant Schedules</button>
         <button *ngIf="!selectedEvent.open" mat-raised-button color="primary" (click)="openEvent()">Open Event Match
           Form</button>
       </div>

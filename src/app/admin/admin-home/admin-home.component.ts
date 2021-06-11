@@ -6,6 +6,7 @@ import { Account } from '../../account/account';
 import { FormGroup, FormControl } from '@angular/forms';
 import * as _ from 'lodash'
 import { promise } from 'protractor';
+import { EventPrintService } from '../event-print.service';
 
 @Component({
   selector: 'app-admin-home',
@@ -37,7 +38,7 @@ export class AdminHomeComponent implements OnInit {
   passwordUpdateMessage: string;
 
 
-  constructor(private userAdminServiceService: UserAdminService, private eventAdminService: EventAdminService) {
+  constructor(private userAdminServiceService: UserAdminService, private eventAdminService: EventAdminService, private eventPrintService: EventPrintService) {
     const formControl = new FormControl();
     formControl.valueChanges.subscribe(x => this.eventSelected(x));
     this.selectEventForm.addControl(this.selectedEventFieldName, formControl);
@@ -174,6 +175,12 @@ export class AdminHomeComponent implements OnInit {
     if (this.selectedEvent && this.selectedEvent.hasSchedule) {
       this.eventAdminService.finalizeSchedule(this.selectedEvent.Id)
         .then(z => { location.reload(); })
+    }
+  }
+
+  printEvent(){
+    if (this.selectedEvent && this.selectedEvent.hasSchedule) {
+      this.eventPrintService.printEvent(this.usersInEvent);       
     }
   }
 

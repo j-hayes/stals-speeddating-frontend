@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Event, EventDate } from '../event/event';
-import { Account } from '../Account/Account';
+import { Account } from '../account/account';
 import { last } from '@angular/router/src/utils/collection';
 
 
@@ -95,7 +95,7 @@ export class EventAdminService {
     return promise;
   }
   createEventSchedule(eventId: string) {
-    let promise = new Promise<EventDate[]>((resolve, reject) => {
+    let promise = new Promise<EventDate[] | void>((resolve, reject) => {
       let apiURL = `${environment.apiUrl}`;
       this.httpClient.post(`${apiURL}/schedule/event/${eventId}`, null).toPromise()
         .then(
@@ -110,7 +110,7 @@ export class EventAdminService {
   }
 
   finalizeSchedule(eventId: string) {
-    let promise = new Promise<EventDate[]>((resolve, reject) => {
+    let promise = new Promise<EventDate[] | void>((resolve, reject) => {
       let apiURL = `${environment.apiUrl}`;
       this.httpClient.put(`${apiURL}/schedule/event/${eventId}/finalize`, null).toPromise()
         .then(
@@ -125,7 +125,7 @@ export class EventAdminService {
   }
 
   openEvent(eventId: string) {
-    let promise = new Promise<EventDate[]>((resolve, reject) => {
+    let promise = new Promise<EventDate[] | void>((resolve, reject) => {
       let apiURL = `${environment.apiUrl}`;
       this.httpClient.put(`${apiURL}/event/${eventId}/open`, null).toPromise()
         .then(
@@ -138,5 +138,4 @@ export class EventAdminService {
     });
     return promise;
   }
-
 }
